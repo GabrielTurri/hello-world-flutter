@@ -29,9 +29,9 @@ class MyAppState extends ChangeNotifier {
   var current = WordPair.random();
 
   void getNext() {
-    isFavorited = false;
     current = WordPair.random();
-    notifyListeners();
+    updateFavoriteIcon();
+    print(favorites);
   }
 
   var favorites = <WordPair>[];
@@ -39,7 +39,6 @@ class MyAppState extends ChangeNotifier {
 
   void toggleFavorite() {
     if (favorites.contains(current)) {
-      isFavorited = false;
       favorites.remove(current);
       print('$current removido dos favoritos!');
     } else {
@@ -47,6 +46,11 @@ class MyAppState extends ChangeNotifier {
       print('$current adicionado aos favoritos!');
       isFavorited = true;
     }
+    updateFavoriteIcon();
+  }
+
+  void updateFavoriteIcon() {
+    favorites.contains(current) ? isFavorited = true : isFavorited = false;
     notifyListeners();
   }
 }
@@ -56,18 +60,6 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var pair = appState.current;
-
-    var unfavoritedIcon = Icon(
-      Icons.favorite_border,
-      size: 16,
-      semanticLabel: 'Ícone de favorito',
-    );
-
-    var favoritedIcon = Icon(
-      Icons.favorite,
-      size: 16,
-      semanticLabel: 'Ícone de favorito',
-    );
 
     return Scaffold(
       body: Center(
@@ -85,8 +77,13 @@ class MyHomePage extends StatelessWidget {
                       appState.toggleFavorite();
                     },
                     label: Text('Like'),
-                    icon:
-                        appState.isFavorited ? favoritedIcon : unfavoritedIcon),
+                    icon: Icon(
+                      appState.isFavorited
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      size: 16,
+                      semanticLabel: 'Ícone de favorito',
+                    )),
                 SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: () {
