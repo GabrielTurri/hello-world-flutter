@@ -82,9 +82,8 @@ class MyHomePage extends StatelessWidget {
                           ? Icons.favorite
                           : Icons.favorite_border,
                       size: 16,
-                      semanticLabel: 'Ícone de favorito',
                     )),
-                SizedBox(width: 8),
+                SizedBox(width: 10),
                 ElevatedButton(
                   onPressed: () {
                     appState.getNext();
